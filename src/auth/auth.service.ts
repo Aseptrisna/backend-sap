@@ -11,16 +11,20 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
-    console.log(user);
-    console.log(user)
-    if (user && (await bcrypt.compare(pass, user.password))) {
+async validateUser(email: string, pass: string): Promise<any> {
+  const user = await this.usersService.findByEmail(email);
+  console.log('User:', user);
+console.log(pass)
+  if (user && user.password) {
+    const isMatch = await bcrypt.compare(pass, user.password);
+    if (isMatch) {
       const { password, ...result } = user.toObject();
       return result;
     }
-    return null;
   }
+  return null;
+}
+
 
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto.email, loginDto.password);

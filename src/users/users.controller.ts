@@ -17,8 +17,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  @Roles(Role.SUPERADMIN)
+  @Get('getAll')
+  // @Roles(Role.SUPERADMIN)
   findAll() {
     return this.usersService.findAll();
   }
