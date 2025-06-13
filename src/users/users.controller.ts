@@ -40,6 +40,18 @@ export class UsersController {
     }
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('profile/:id')
+  async getProfile(@Param('id') id: string) {
+    try {
+      const user = await this.usersService.findOne(id);
+      return ResponseUtil.success(user, 'Berhasil mengambil profil pengguna');
+    } catch (error) {
+      return ResponseUtil.error(error.message || 'Failed to retrieve profile');
+    }
+
+  }
+
   @Get(':id')
   @Roles(Role.SUPERADMIN, Role.ADMIN)
   findOne(@Param('id') id: string) {
