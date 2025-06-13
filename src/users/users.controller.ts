@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from './enums/role.enum';
+import { ResponseUtil } from 'src/utils/response.util';
 
 @Controller('users')
 // @UseGuards(JwtAuthGuard, RolesGuard)
@@ -13,14 +14,30 @@ export class UsersController {
 
   @Post('create')
   // @Roles(Role.SUPERADMIN)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    console.log('Creating user with DTO:', createUserDto);
+  
+    try {
+      const data ={}
+        this.usersService.create(createUserDto);
+       return ResponseUtil.success(data,'Berhasil membuat user');
+    } catch (error) {
+      return ResponseUtil.error(error.message || 'Failed to create user');
+      
+    }
   }
 
   @Get('getAll')
   // @Roles(Role.SUPERADMIN)
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+   
+
+    try {
+       const users= await  this.usersService.findAll();
+       return ResponseUtil.success(users, 'Berhasil mengambil semua user');
+    } catch (error) {
+      return ResponseUtil.error(error.message || 'Failed to retrieve users');
+    }
   }
 
   @Get(':id')
