@@ -15,6 +15,7 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     
     try {
+      console.log('Login attempt with')
       const users=await this.authService.login(loginDto);
       return ResponseUtil.success(users, 'Berhasil login');
     } catch (error) {
